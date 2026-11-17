@@ -1,0 +1,1 @@
+Explain the topic "{topic}" for a {level} student in simple language. Keep it under 150 words and give one example.

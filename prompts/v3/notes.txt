@@ -1,0 +1,2 @@
+Make concise revision notes on "{topic}" for a {level} student.
+Max 10 bullet points. Format: Key terms (bold), Important points, formulas/rules if any, one-line memory tip.

@@ -1,0 +1,2 @@
+Explain the topic "{topic}" for a {level} student.
+Max 150 words. Format: one-line definition, simple explanation, one real-life example, one key takeaway.
