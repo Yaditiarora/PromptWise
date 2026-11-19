@@ -39,9 +39,15 @@ apply_theme()
 db_service.init_db()
 
 
+# Handle pending navigation before sidebar radio is instantiated
+if "pending_nav" in st.session_state:
+    st.session_state["nav_selection_radio"] = st.session_state.pop("pending_nav")
+
+
 # ----------------- SIDEBAR NAVIGATION -----------------
 def set_active_page(page_name: str):
     """Callback to switch pages programmatically."""
+    st.session_state["pending_nav"] = page_name
     st.session_state["nav_selection"] = page_name
 
 
@@ -70,22 +76,16 @@ with st.sidebar:
         "About Project",
     ]
 
-    current_page = st.session_state.get("nav_selection", "Dashboard")
-    if current_page not in pages:
-        current_page = "Dashboard"
+    if "nav_selection_radio" not in st.session_state:
+        st.session_state["nav_selection_radio"] = "Dashboard"
 
     selected_page = st.radio(
         "Navigation",
         pages,
-        index=pages.index(current_page),
         key="nav_selection_radio",
         label_visibility="collapsed",
     )
-
-    # Sync state if user clicked radio
-    if selected_page != current_page:
-        st.session_state["nav_selection"] = selected_page
-        st.rerun()
+    st.session_state["nav_selection"] = selected_page
 
     st.markdown("<hr style='border-color: rgba(139, 92, 246, 0.15); margin: 24px 0 16px 0;'>", unsafe_allow_html=True)
 
@@ -140,7 +140,7 @@ with st.sidebar:
     )
 
 # ----------------- VIEW ROUTING -----------------
-active_page = st.session_state.get("nav_selection", "Dashboard")
+active_page = st.session_state.get("nav_selection_radio", "Dashboard")
 
 if active_page == "Dashboard":
     render_dashboard(set_active_page)

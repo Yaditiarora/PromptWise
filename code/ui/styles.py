@@ -106,6 +106,49 @@ THEME_CSS = """
     margin-top: 4px;
 }
 
+/* ---------------- Quick Start Mode Cards ---------------- */
+.pw-mode-card {
+    background: rgba(22, 27, 46, 0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 20px 16px;
+    text-align: center;
+    min-height: 175px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    transition: all 0.25s ease-in-out;
+}
+
+.pw-mode-card:hover {
+    border-color: var(--card-hover-border);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.25);
+}
+
+.pw-mode-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin: 8px 0 4px 0;
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
+}
+
+.pw-mode-desc {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
 /* ---------------- Interactive Flashcard Component ---------------- */
 .pw-flashcard {
     background: linear-gradient(145deg, rgba(30, 37, 66, 0.9) 0%, rgba(19, 23, 43, 0.95) 100%);

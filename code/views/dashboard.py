@@ -42,87 +42,123 @@ def render_dashboard(set_page_fn):
     st.subheader("⚡ Quick Start Study Modes")
     st.caption("Select any study mode to jump directly into interactive learning.")
 
-    m1, m2, m3, m4, m5 = st.columns(5)
+    def launch_mode_callback(mode_name: str):
+        st.session_state["pending_nav"] = "Study Assistant"
+        st.session_state["nav_selection_radio"] = "Study Assistant"
+        st.session_state["sa_mode_select"] = mode_name
+        st.session_state["active_study_mode"] = mode_name
 
-    with m1:
+    def view_history_callback():
+        st.session_state["pending_nav"] = "Prompt History"
+        st.session_state["nav_selection_radio"] = "Prompt History"
+
+    # Row 1: 3 Cards (Explain, Summarize, Quiz)
+    r1_c1, r1_c2, r1_c3 = st.columns(3)
+
+    with r1_c1:
         st.markdown(
             """
-            <div class="pw-card" style="text-align: center; min-height: 160px;">
-                <div style="font-size: 2rem;">📖</div>
-                <div style="font-weight: 700; margin: 8px 0 4px 0; color: #f8fafc;">Explain</div>
-                <div style="font-size: 0.8rem; color: #94a3b8;">Intuitive conceptual explanations with examples.</div>
+            <div class="pw-mode-card">
+                <div style="font-size: 2.2rem;">📖</div>
+                <div class="pw-mode-title">Explain</div>
+                <div class="pw-mode-desc">Intuitive conceptual explanations with real-world examples.</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-        if st.button("Start Explain", key="dash_btn_explain", use_container_width=True):
-            st.session_state["active_study_mode"] = "Explain"
-            set_page_fn("Study Assistant")
-            st.rerun()
+        st.button(
+            "Start Explain",
+            key="dash_btn_explain",
+            use_container_width=True,
+            type="primary",
+            on_click=launch_mode_callback,
+            args=("Explain",),
+        )
 
-    with m2:
+    with r1_c2:
         st.markdown(
             """
-            <div class="pw-card" style="text-align: center; min-height: 160px;">
-                <div style="font-size: 2rem;">📝</div>
-                <div style="font-weight: 700; margin: 8px 0 4px 0; color: #f8fafc;">Summarize</div>
-                <div style="font-size: 0.8rem; color: #94a3b8;">High-impact revision notes & memory tips.</div>
+            <div class="pw-mode-card">
+                <div style="font-size: 2.2rem;">📝</div>
+                <div class="pw-mode-title">Summarize</div>
+                <div class="pw-mode-desc">High-impact revision notes, bullet points & memory tips.</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-        if st.button("Start Notes", key="dash_btn_notes", use_container_width=True):
-            st.session_state["active_study_mode"] = "Summarize"
-            set_page_fn("Study Assistant")
-            st.rerun()
+        st.button(
+            "Start Summarize",
+            key="dash_btn_notes",
+            use_container_width=True,
+            type="primary",
+            on_click=launch_mode_callback,
+            args=("Summarize",),
+        )
 
-    with m3:
+    with r1_c3:
         st.markdown(
             """
-            <div class="pw-card" style="text-align: center; min-height: 160px;">
-                <div style="font-size: 2rem;">❓</div>
-                <div style="font-weight: 700; margin: 8px 0 4px 0; color: #f8fafc;">Quiz</div>
-                <div style="font-size: 0.8rem; color: #94a3b8;">Interactive multiple-choice quizzes with scoring.</div>
+            <div class="pw-mode-card">
+                <div style="font-size: 2.2rem;">❓</div>
+                <div class="pw-mode-title">Quiz</div>
+                <div class="pw-mode-desc">Interactive multiple-choice quizzes with instant scoring.</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-        if st.button("Start Quiz", key="dash_btn_quiz", use_container_width=True):
-            st.session_state["active_study_mode"] = "Quiz"
-            set_page_fn("Study Assistant")
-            st.rerun()
+        st.button(
+            "Start Quiz",
+            key="dash_btn_quiz",
+            use_container_width=True,
+            type="primary",
+            on_click=launch_mode_callback,
+            args=("Quiz",),
+        )
 
-    with m4:
+    st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+
+    # Row 2: 2 Cards (Flashcards, Practice Test)
+    r2_c1, r2_c2 = st.columns(2)
+
+    with r2_c1:
         st.markdown(
             """
-            <div class="pw-card" style="text-align: center; min-height: 160px;">
-                <div style="font-size: 2rem;">🗂️</div>
-                <div style="font-weight: 700; margin: 8px 0 4px 0; color: #f8fafc;">Flashcards</div>
-                <div style="font-size: 0.8rem; color: #94a3b8;">Interactive card flip with mastery tracking.</div>
+            <div class="pw-mode-card">
+                <div style="font-size: 2.2rem;">🗂️</div>
+                <div class="pw-mode-title">Flashcards</div>
+                <div class="pw-mode-desc">Interactive card flip with spaced repetition mastery tracking.</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-        if st.button("Start Cards", key="dash_btn_cards", use_container_width=True):
-            st.session_state["active_study_mode"] = "Flashcards"
-            set_page_fn("Study Assistant")
-            st.rerun()
+        st.button(
+            "Start Flashcards",
+            key="dash_btn_cards",
+            use_container_width=True,
+            type="primary",
+            on_click=launch_mode_callback,
+            args=("Flashcards",),
+        )
 
-    with m5:
+    with r2_c2:
         st.markdown(
             """
-            <div class="pw-card" style="text-align: center; min-height: 160px;">
-                <div style="font-size: 2rem;">⏱️</div>
-                <div style="font-weight: 700; margin: 8px 0 4px 0; color: #f8fafc;">Practice Test</div>
-                <div style="font-size: 0.8rem; color: #94a3b8;">Timed exam simulation with auto evaluation.</div>
+            <div class="pw-mode-card">
+                <div style="font-size: 2.2rem;">⏱️</div>
+                <div class="pw-mode-title">Practice Test</div>
+                <div class="pw-mode-desc">Timed exam simulation with mixed questions & AI evaluation.</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-        if st.button("Start Test", key="dash_btn_test", use_container_width=True):
-            st.session_state["active_study_mode"] = "Test"
-            set_page_fn("Study Assistant")
-            st.rerun()
+        st.button(
+            "Start Practice Test",
+            key="dash_btn_test",
+            use_container_width=True,
+            type="primary",
+            on_click=launch_mode_callback,
+            args=("Test",),
+        )
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -150,9 +186,7 @@ def render_dashboard(set_page_fn):
                         """,
                         unsafe_allow_html=True,
                     )
-            if st.button("View Full History →", key="view_hist_btn"):
-                set_page_fn("Prompt History")
-                st.rerun()
+            st.button("View Full History →", key="view_hist_btn", on_click=view_history_callback)
 
     with col_right:
         st.subheader("📊 Study Activity Breakdown")
