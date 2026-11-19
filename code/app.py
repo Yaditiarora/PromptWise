@@ -1,348 +1,161 @@
+"""
+PromptWise: AI-Powered Study Assistant
+Main application entry point.
 
+Team Cognivance | SCSE4041 Prompt Engineering Mini Project
+"""
+
+import sys
 from pathlib import Path
-import time
+
+# Ensure 'code' folder is on sys.path for direct imports
+CODE_DIR = Path(__file__).resolve().parent
+if str(CODE_DIR) not in sys.path:
+    sys.path.insert(0, str(CODE_DIR))
 
 import streamlit as st
-from google import genai
-from google.genai import types
+from services import db_service
+from services.gemini_service import is_client_ready
+from ui.styles import apply_theme
+from views.about import render_about
+from views.comparator import render_response_comparison
+from views.dashboard import render_dashboard
+from views.history import render_prompt_history
+from views.optimizer import render_prompt_optimizer
+from views.study_assistant import render_study_assistant
 
-
-# ---------------- CONFIGURATION ----------------
-
+# ----------------- STREAMLIT CONFIGURATION -----------------
 st.set_page_config(
-    page_title="PromptWise",
+    page_title="PromptWise • AI Study Assistant",
     page_icon="📚",
-    layout="centered"
+    layout="wide",
+    initial_sidebar_state="expanded",
 )
 
-# Primary model followed by fallback candidates.
-# These must be supported by your API key.
-MODELS = [
-    "gemini-3.5-flash-lite"
-]
+# Apply global dark navy & purple theme
+apply_theme()
 
-PROMPT_DIR = (
-    Path(__file__).resolve().parent.parent
-    / "prompts"
-    / "final"
-)
+# Initialize SQLite database
+db_service.init_db()
 
 
-# ---------------- LOAD PROMPTS ----------------
-
-def load(name):
-    return (PROMPT_DIR / name).read_text(
-        encoding="utf-8"
-    ).strip()
+# ----------------- SIDEBAR NAVIGATION -----------------
+def set_active_page(page_name: str):
+    """Callback to switch pages programmatically."""
+    st.session_state["nav_selection"] = page_name
 
 
-SYSTEM_PROMPT = load("P1_system.txt")
-EXPLAIN_PROMPT = load("P2_explain.txt")
-NOTES_PROMPT = load("P3_notes.txt")
-QUIZ_PROMPT = load("P4_quiz.txt")
-MARKS_PROMPT = load("P5_marks_answer.txt")
-GRADE_PROMPT = load("P6_grading.txt")
-
-
-LANG_NOTE = {
-    "English": "",
-    "Hinglish": (
-        "\nRespond in simple Hinglish (Roman script) "
-        "and keep technical terms in English."
-    ),
-}
-
-
-# ---------------- GEMINI CLIENT ----------------
-
-try:
-    client = genai.Client(
-        api_key=st.secrets["GEMINI_API_KEY"],
-        http_options=types.HttpOptions(
-            timeout=60000
-        )
+# Sidebar brand header
+with st.sidebar:
+    st.markdown(
+        """
+        <div style="text-align: left; padding: 10px 0 16px 0;">
+            <div style="font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                📚 PromptWise
+            </div>
+            <div style="font-size: 0.85rem; color: #a5b4fc; font-weight: 600; margin-top: 2px;">
+                Learn Smarter. Prompt Better.
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
-except Exception as e:
-    st.error(
-        f"Gemini client initialization failed: {e}"
-    )
-    st.stop()
-
-
-# ---------------- AI RESPONSE WITH MODEL FALLBACK ----------------
-
-def ask(prompt):
-
-    errors = []
-
-    for model in MODELS:
-
-        try:
-            st.info(f"Connecting to {model}...")
-
-            response = client.models.generate_content(
-                model=model,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    system_instruction=SYSTEM_PROMPT
-                ),
-            )
-
-            if response.text:
-                st.success(
-                    f"Generated successfully using {model}"
-                )
-                return response.text
-
-            errors.append(
-                f"{model}: Empty response"
-            )
-
-        except Exception as e:
-
-            error_message = str(e).upper()
-
-            errors.append(
-                f"{model}: {e}"
-            )
-
-            retryable = any(
-                code in error_message
-                for code in [
-                    "503",
-                    "UNAVAILABLE",
-                    "429",
-                    "RESOURCE_EXHAUSTED",
-                    "500",
-                    "502",
-                    "504",
-                    "404",
-                    "NOT_FOUND"
-                ]
-            )
-
-            if not retryable:
-                raise
-
-            st.warning(
-                f"{model} is unavailable. "
-                "Trying the next model..."
-            )
-
-            time.sleep(1)
-
-    raise RuntimeError(
-        "All available models failed. Details:\n"
-        + "\n".join(errors)
-    )
-
-
-# ---------------- STREAMLIT APP ----------------
-
-st.title("📚 PromptWise")
-
-st.caption(
-    "AI study assistant: it teaches, tests, and fixes your weak spots."
-)
-
-
-# ---------------- USER INPUTS ----------------
-
-topic = st.text_input(
-    "Topic",
-    placeholder="e.g. Mealy and Moore machines"
-)
-
-level = st.selectbox(
-    "Academic level",
-    [
-        "School",
-        "Undergraduate",
-        "Postgraduate"
+    pages = [
+        "Dashboard",
+        "Study Assistant",
+        "Prompt Optimizer",
+        "Compare Responses",
+        "Prompt History",
+        "About Project",
     ]
-)
 
-task = st.selectbox(
-    "Task",
-    [
-        "Explain",
-        "Notes",
-        "Quiz",
-        "Exam answer (marks-based)"
-    ]
-)
+    current_page = st.session_state.get("nav_selection", "Dashboard")
+    if current_page not in pages:
+        current_page = "Dashboard"
 
-language = st.selectbox(
-    "Language",
-    [
-        "English",
-        "Hinglish"
-    ]
-)
-
-marks = None
-
-if task.startswith("Exam"):
-    marks = st.selectbox(
-        "Marks",
-        [2, 5, 10]
+    selected_page = st.radio(
+        "Navigation",
+        pages,
+        index=pages.index(current_page),
+        key="nav_selection_radio",
+        label_visibility="collapsed",
     )
 
-note = LANG_NOTE[language]
+    # Sync state if user clicked radio
+    if selected_page != current_page:
+        st.session_state["nav_selection"] = selected_page
+        st.rerun()
 
+    st.markdown("<hr style='border-color: rgba(139, 92, 246, 0.15); margin: 24px 0 16px 0;'>", unsafe_allow_html=True)
 
-# ---------------- GENERATE CONTENT ----------------
-
-if st.button("Generate", type="primary"):
-
-    if not topic.strip():
-
-        st.warning(
-            "Please enter a topic."
-        )
-
-    else:
-
-        if task == "Explain":
-
-            prompt = EXPLAIN_PROMPT.format(
-                topic=topic,
-                level=level,
-                language_note=note
-            )
-
-        elif task == "Notes":
-
-            prompt = NOTES_PROMPT.format(
-                topic=topic,
-                level=level,
-                language_note=note
-            )
-
-        elif task == "Quiz":
-
-            prompt = QUIZ_PROMPT.format(
-                topic=topic,
-                level=level,
-                language_note=note
-            )
-
-        else:
-
-            prompt = MARKS_PROMPT.format(
-                topic=topic,
-                level=level,
-                marks=marks,
-                language_note=note
-            )
-
-        try:
-
-            with st.spinner(
-                "Thinking... PromptWise is generating your content."
-            ):
-
-                output = ask(prompt)
-
-            st.session_state["output"] = output
-
-            if task == "Quiz":
-
-                st.session_state["quiz"] = output
-                st.session_state["quiz_topic"] = topic
-                st.session_state["quiz_level"] = level
-
-            else:
-
-                for key in (
-                    "quiz",
-                    "quiz_topic",
-                    "quiz_level"
-                ):
-                    st.session_state.pop(
-                        key,
-                        None
-                    )
-
-            st.success(
-                "Content generated successfully!"
-            )
-
-        except Exception as e:
-
-            st.error(
-                f"Something went wrong: {e}"
-            )
-
-
-# ---------------- DISPLAY LATEST OUTPUT ----------------
-
-if "output" in st.session_state:
-
-    st.divider()
-
-    st.subheader(
-        "Generated Content"
-    )
+    # System Status & Quick Stats
+    ready, status_msg = is_client_ready()
+    status_color = "#10b981" if ready else "#ef4444"
+    status_icon = "🟢" if ready else "🔴"
+    status_text = "Gemini API Connected" if ready else "API Disconnected"
 
     st.markdown(
-        st.session_state["output"]
+        f"""
+        <div style="background: rgba(22, 27, 46, 0.6); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 10px; padding: 12px; margin-bottom: 16px;">
+            <div style="font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 0.05em;">SYSTEM STATUS</div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 0.85rem; font-weight: 600; color: {status_color};">
+                <span>{status_icon}</span>
+                <span>{status_text}</span>
+            </div>
+            <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 4px;">
+                Model: <code>gemini-3.5-flash-lite</code>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
-
-# ---------------- QUIZ GRADING ----------------
-
-if "quiz" in st.session_state:
-
-    st.divider()
-
-    st.subheader(
-        "Submit your quiz answers"
+    # Stats widget in sidebar
+    stats = db_service.get_history_stats()
+    st.markdown(
+        f"""
+        <div style="background: rgba(22, 27, 46, 0.6); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 10px; padding: 12px; margin-bottom: 20px;">
+            <div style="font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 0.05em;">SAVED SESSIONS</div>
+            <div style="font-size: 1.4rem; font-weight: 800; color: #c4b5fd; margin-top: 2px;">
+                {stats['total_sessions']}
+            </div>
+            <div style="font-size: 0.75rem; color: #94a3b8;">
+                Available in persistent history
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
-    answers = st.text_area(
-        "Type your answers (e.g. 1-B, 2-A, 3-C, 4-..., 5-...)"
+    # Footer
+    st.markdown(
+        """
+        <div style="font-size: 0.75rem; color: #64748b; text-align: center; margin-top: 20px;">
+            PromptWise v2.0 • Team Cognivance<br>
+            SCSE4041 Prompt Engineering
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
-    if st.button("Check my answers"):
+# ----------------- VIEW ROUTING -----------------
+active_page = st.session_state.get("nav_selection", "Dashboard")
 
-        if not answers.strip():
+if active_page == "Dashboard":
+    render_dashboard(set_active_page)
 
-            st.warning(
-                "Please type your answers first."
-            )
+elif active_page == "Study Assistant":
+    render_study_assistant()
 
-        else:
+elif active_page == "Prompt Optimizer":
+    render_prompt_optimizer()
 
-            try:
+elif active_page == "Compare Responses":
+    render_response_comparison()
 
-                with st.spinner(
-                    "Checking your answers..."
-                ):
+elif active_page == "Prompt History":
+    render_prompt_history()
 
-                    result = ask(
-                        GRADE_PROMPT.format(
-                            topic=st.session_state["quiz_topic"],
-                            level=st.session_state["quiz_level"],
-                            quiz=st.session_state["quiz"],
-                            answers=answers,
-                            language_note=note
-                        )
-                    )
-
-                st.success(
-                    "Quiz checked successfully!"
-                )
-
-                st.subheader(
-                    "Your Quiz Results"
-                )
-
-                st.markdown(result)
-
-            except Exception as e:
-
-                st.error(
-                    f"Something went wrong: {e}"
-                )
+elif active_page == "About Project":
+    render_about()

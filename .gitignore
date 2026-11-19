@@ -1,4 +1,8 @@
-.streamlit/secrets.toml
+.streamlit/*
+!.streamlit/secrets.toml.example
 venv/
 __pycache__/
 *.pyc
+*.db
+code/data/*.db
+*.save
