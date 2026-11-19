@@ -17,6 +17,12 @@ def render_prompt_history():
         badge_text="Persistent SQLite Storage",
     )
 
+    st.caption(
+        "💡 **Local vs. Cloud Persistence:** On local runs, your study sessions are persisted permanently in `code/data/history.db`. "
+        "On Streamlit Community Cloud (which runs on ephemeral container instances), records remain available throughout your active browser session, "
+        "but reset when the cloud container restarts or sleeps."
+    )
+
     # ---------------- SEARCH & FILTERS ----------------
     col_search, col_f_mode, col_f_diff = st.columns([3, 2, 2])
 
@@ -128,10 +134,20 @@ def render_prompt_history():
                 st.markdown("**Generated Output Preview:**")
                 st.markdown(response_text)
 
-                # Delete single item button
-                del_col, _ = st.columns([2, 5])
-                with del_col:
-                    if st.button(f"🗑️ Delete Session #{item_id}", key=f"del_item_{item_id}"):
+                # Actions row
+                act_col1, act_col2, _ = st.columns([2, 2, 3])
+                with act_col1:
+                    if st.button("🚀 Load in Study Assistant", key=f"load_item_{item_id}"):
+                        st.session_state["current_topic"] = topic
+                        st.session_state["sa_topic_input"] = topic
+                        st.session_state["pending_nav"] = "Study Assistant"
+                        st.session_state["nav_selection_radio"] = "Study Assistant"
+                        st.session_state["active_study_mode"] = mode if mode in ["Explain", "Summarize", "Quiz", "Flashcards", "Test"] else "Explain"
+                        st.session_state["sa_mode_select"] = st.session_state["active_study_mode"]
+                        st.rerun()
+
+                with act_col2:
+                    if st.button(f"🗑️ Delete Session", key=f"del_item_{item_id}"):
                         db_service.delete_history(item_id)
                         st.success(f"Deleted session #{item_id}")
                         st.rerun()

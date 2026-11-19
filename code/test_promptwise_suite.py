@@ -7,6 +7,7 @@ response comparison, database persistence, edge cases, and Gemini API calls.
 import json
 import os
 import sys
+import time
 import tomllib
 from pathlib import Path
 
@@ -157,6 +158,7 @@ def test_live_gemini_api():
 
 def test_live_prompt_optimizer():
     print("\n--- [TEST 5] Testing Live Prompt Optimizer with Gemini ---")
+    time.sleep(3.0)
     raw_prompt = "Explain photosynthesis."
     result = optimize_prompt(
         raw_prompt=raw_prompt,
@@ -164,6 +166,9 @@ def test_live_prompt_optimizer():
         difficulty="Beginner",
         goal="School exam prep",
         audience="High School Student",
+        output_format="Structured sections with definition, steps, example, and takeaways",
+        constraints="Under 200 words, no hallucination",
+        language="English",
     )
     assert "optimized_prompt" in result, "Missing optimized_prompt in result"
     assert len(result["optimized_prompt"]) > len(raw_prompt), "Optimized prompt was not expanded"
@@ -179,6 +184,7 @@ def test_live_study_modes():
 
     # 1. Mode A: Explain
     print("Testing Mode A: Explain...")
+    time.sleep(3.0)
     prompt_exp = ENHANCED_EXPLAIN_PROMPT.format(
         topic=topic,
         difficulty_guideline=DIFFICULTY_GUIDELINES["Intermediate"],
@@ -190,6 +196,7 @@ def test_live_study_modes():
 
     # 2. Mode B: Summarize
     print("Testing Mode B: Summarize...")
+    time.sleep(3.0)
     prompt_sum = ENHANCED_SUMMARIZE_PROMPT.format(
         topic=topic,
         difficulty_guideline=DIFFICULTY_GUIDELINES["Intermediate"],
@@ -201,6 +208,7 @@ def test_live_study_modes():
 
     # 3. Mode C: Quiz (Structured JSON)
     print("Testing Mode C: Interactive Quiz...")
+    time.sleep(3.0)
     prompt_quiz = STRUCTURED_QUIZ_PROMPT.format(
         topic=topic,
         difficulty="Intermediate",
@@ -218,6 +226,7 @@ def test_live_study_modes():
 
     # 4. Mode D: Flashcards (Structured JSON)
     print("Testing Mode D: Flashcards...")
+    time.sleep(3.0)
     prompt_fc = STRUCTURED_FLASHCARDS_PROMPT.format(
         topic=topic,
         difficulty="Intermediate",
@@ -234,6 +243,7 @@ def test_live_study_modes():
 
     # 5. Mode E: Practice Test (Structured JSON)
     print("Testing Mode E: Practice Test...")
+    time.sleep(3.0)
     prompt_test = STRUCTURED_TEST_PROMPT.format(
         topic=topic,
         num_questions=3,
@@ -257,8 +267,11 @@ def test_live_response_comparison():
         "You are an expert Computer Science Professor. Explain recursion to an undergraduate student. "
         "Define base case and recursive step with a call stack diagram and factorial example. Max 150 words."
     )
+    time.sleep(3.0)
     resp_a = call_gemini(basic_prompt, system_instruction="You are a helpful assistant.", temperature=0.7)
+    time.sleep(3.0)
     resp_b = call_gemini(optimized_prompt, temperature=0.7)
+    time.sleep(3.0)
 
     eval_data = evaluate_responses(
         topic=topic,

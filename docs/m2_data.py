@@ -19,8 +19,8 @@ TEAM = dict(
              ("S24CSEU0340", "Mohita Purohit")],
 )
 LINKS = dict(
-    prototype=F("deployed Streamlit app link"),
-    repo=F("public GitHub repo link"),
+    prototype="https://promptwise-a7i9rzr9og3ef8hqi26nub.streamlit.app/",
+    repo="https://github.com/Yaditiarora/PromptWise",
     reel=F("reel link (Drive / unlisted YouTube)"),
     reel_seconds=F("exact reel length in seconds (90-150)"),
 )
@@ -39,7 +39,7 @@ SECTION2_TEXT = [
   "P2 to P5 each produce one kind of study material with a fixed format, because one long prompt for everything gave uncontrolled length and structure. "
   "P6 grades the quiz answers, which closes a learn, test, fix loop."),
  ("Tool and model",
-  "Gemini 4 Hydrogen through the Gemini API (Google AI Studio), called from a Streamlit web app. Gemini was chosen because it is available free in AI Studio "
+  "Gemini 3.5 Flash Lite through the Gemini API (Google AI Studio), called from a Streamlit web app. Gemini was chosen because it is available free in AI Studio "
   "and responds quickly; Streamlit lets us expose the prompt variables (topic, level, task, language) as simple inputs and share one link with evaluators."),
  ("What changed since Milestone 1",
   "Milestone 1 planned to compare ChatGPT and Gemini and keep a web app or no-code builder as options. We narrowed to one model (Gemini) and one coded app, "
@@ -83,7 +83,7 @@ PROMPT_SHEETS = [
       output="Correct/incorrect per answer with reason, score out of 5, weak concepts, 5-line revision", examples=0,
       sample_in=F("real quiz answers typed"), sample_out=F("actual output copied from the app")),
 ]
-TOOL_AND_SETTINGS = "Gemini 4 Hydrogen via Gemini API (Google AI Studio)", "default (no temperature or other settings changed)"
+TOOL_AND_SETTINGS = "Gemini 3.5 Flash Lite via Gemini API (Google AI Studio)", "default (temperature=0.7)"
 
 # ---------------- Section 3: modules and iteration log ----------------
 # Status must be exactly: Working / Partly working / Not started. Q20 lists only Working modules, same names.

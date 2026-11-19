@@ -76,14 +76,17 @@ OPTIMIZER_PROMPT = """You are an expert prompt engineer. Transform the following
 User's Original Prompt:
 "{raw_prompt}"
 
-Additional Context:
+Additional Context & Parameters:
 - Topic: {topic}
 - Target Difficulty: {difficulty}
 - Study Goal: {goal}
 - Target Audience: {audience}
+- Desired Output Format: {output_format}
+- Specific Constraints & Requirements: {constraints}
+{language_note}
 
 Instructions for Optimization:
-Create an engineered prompt that contains ALL of the following components:
+Create an engineered prompt that contains ALL of the following 7 core components:
 1. Clear Role Assignment (e.g., world-class academic tutor or domain specialist)
 2. Specific Task Instructions (exact actionable steps)
 3. Topic Context & Background

@@ -1,9 +1,10 @@
 """
-Gemini service for PromptWise.
-Manages Google GenAI client, model fallbacks, error handling, and response generation.
+Gemini Service for PromptWise.
+Manages Google GenAI client, model fallbacks, error handling, and robust response generation.
 """
 
 import json
+import os
 import re
 import time
 from typing import Any, Dict, List, Optional, Tuple
@@ -14,17 +15,37 @@ from google.genai import types
 
 from prompts.templates import SYSTEM_PROMPT
 
-# Models list matching project configuration
+# Models configured for generation with automatic fallback
+# Primary: gemini-3.5-flash-lite (fastest, highest quota responsiveness)
+# Secondary fallback: gemini-3.8-flash
 MODELS = [
-    "gemini-3.5-flash-lite"
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash",
 ]
+
+
+def resolve_api_key() -> Optional[str]:
+    """Retrieve Gemini API key from Streamlit secrets or environment variables."""
+    key = None
+    try:
+        if hasattr(st, "secrets") and "GEMINI_API_KEY" in st.secrets:
+            key = st.secrets["GEMINI_API_KEY"]
+    except Exception:
+        pass
+
+    if not key:
+        key = os.environ.get("GEMINI_API_KEY")
+
+    if key:
+        key = key.strip().strip('"').strip("'")
+    return key
 
 
 @st.cache_resource
 def get_gemini_client() -> Optional[genai.Client]:
-    """Initialize and cache the Gemini API client using Streamlit secrets."""
+    """Initialize and cache the Gemini API client using Streamlit secrets or environment variables."""
     try:
-        api_key = st.secrets.get("GEMINI_API_KEY")
+        api_key = resolve_api_key()
         if not api_key:
             return None
         return genai.Client(
@@ -38,15 +59,16 @@ def get_gemini_client() -> Optional[genai.Client]:
 
 def is_client_ready() -> Tuple[bool, str]:
     """Check if the Gemini client is configured and ready."""
-    if "GEMINI_API_KEY" not in st.secrets:
+    api_key = resolve_api_key()
+    if not api_key:
         return (
             False,
-            "GEMINI_API_KEY is missing from `.streamlit/secrets.toml`. "
-            "Please add your key to enable AI generation.",
+            "GEMINI_API_KEY is not configured. Please add your key to `.streamlit/secrets.toml` "
+            "or set the GEMINI_API_KEY environment variable.",
         )
     client = get_gemini_client()
     if not client:
-        err = st.session_state.get("client_error", "Unknown error")
+        err = st.session_state.get("client_error", "Initialization failed")
         return False, f"Failed to initialize Gemini client: {err}"
     return True, "Client initialized successfully."
 
@@ -77,63 +99,60 @@ def call_gemini(
     errors: List[str] = []
 
     for model in MODELS:
-        try:
-            config_kwargs = {
-                "system_instruction": sys_instr,
-                "temperature": temperature,
-            }
-            if response_mime_type:
-                config_kwargs["response_mime_type"] = response_mime_type
+        for attempt in range(3):  # Up to 3 attempts with exponential backoff for transient spikes
+            try:
+                config_kwargs = {
+                    "system_instruction": sys_instr,
+                    "temperature": temperature,
+                }
+                if response_mime_type:
+                    config_kwargs["response_mime_type"] = response_mime_type
 
-            config = types.GenerateContentConfig(**config_kwargs)
+                config = types.GenerateContentConfig(**config_kwargs)
 
-            response = client.models.generate_content(
-                model=model,
-                contents=prompt,
-                config=config,
-            )
+                response = client.models.generate_content(
+                    model=model,
+                    contents=prompt,
+                    config=config,
+                )
 
-            if response and response.text:
-                return response.text.strip()
+                if response and response.text:
+                    return response.text.strip()
 
-            errors.append(f"{model}: Returned empty response")
+                errors.append(f"{model} (attempt {attempt+1}): Returned empty response")
 
-        except Exception as e:
-            err_str = str(e)
-            err_upper = err_str.upper()
-            errors.append(f"{model}: {err_str}")
+            except Exception as e:
+                err_str = str(e)
+                err_upper = err_str.upper()
+                errors.append(f"{model} (attempt {attempt+1}): {err_str}")
 
-            # Recognize retryable conditions
-            retryable = any(
-                code in err_upper
-                for code in [
-                    "503",
-                    "UNAVAILABLE",
-                    "429",
-                    "RESOURCE_EXHAUSTED",
-                    "500",
-                    "502",
-                    "504",
-                    "DEADLINE_EXCEEDED",
-                    "TIMEOUT",
-                ]
-            )
+                # Immediate fatal errors that should abort immediately (e.g., bad API key)
+                is_auth_error = any(
+                    token in err_upper
+                    for token in ["API_KEY_INVALID", "API KEY NOT VALID", "INVALID_API_KEY", "PERMISSION_DENIED"]
+                )
+                if is_auth_error:
+                    raise RuntimeError(
+                        f"Gemini API Authentication Error: Invalid or expired API key. "
+                        f"Please check your GEMINI_API_KEY in `.streamlit/secrets.toml` or environment variables."
+                    )
 
-            if not retryable:
-                # Fatal error (e.g. invalid key, bad request)
-                raise RuntimeError(f"Gemini API error ({model}): {err_str}")
+                # Transient errors (quota 429, 503, connection resets, timeouts, DNS/socket drops)
+                time.sleep(2.0 * (attempt + 1))
 
-            time.sleep(1.5)
-
-    # If all models failed
+    # If all candidate models failed
     all_err_msg = "\n".join(errors)
     if "429" in all_err_msg or "RESOURCE_EXHAUSTED" in all_err_msg:
         raise RuntimeError(
-            "Gemini API quota exceeded (Rate limit / 429). Please wait a moment before trying again."
+            "Gemini API rate limit exceeded (Quota 429). Please wait a few seconds and try again."
         )
     elif "503" in all_err_msg or "UNAVAILABLE" in all_err_msg:
         raise RuntimeError(
-            "Gemini service is temporarily experiencing high demand (503). Please retry in a few moments."
+            "Gemini service is temporarily under high demand (503). Retrying shortly usually succeeds."
+        )
+    elif "8" in all_err_msg and "NODENAME" in all_err_msg:
+        raise RuntimeError(
+            "Network connection error: Unable to resolve Gemini API endpoint. Please check your internet connection."
         )
     else:
         raise RuntimeError(
@@ -152,7 +171,6 @@ def clean_json_string(text: str) -> str:
 
 def sanitize_escapes(text: str) -> str:
     """Sanitize invalid escape sequences like LaTeX symbols in JSON strings."""
-    # Replace single backslash followed by non-standard escape character with just the character
     return re.sub(r'\\([^"\\/bfnrtu])', r'\1', text)
 
 

@@ -6,3 +6,4 @@ __pycache__/
 *.db
 code/data/*.db
 *.save
+docs/M2_*.pdf

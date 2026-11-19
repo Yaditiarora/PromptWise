@@ -7,6 +7,7 @@ from typing import Any, Dict
 
 from prompts.templates import (
     DIFFICULTY_GUIDELINES,
+    LANG_NOTE,
     OPTIMIZER_PROMPT,
     OPTIMIZER_SYSTEM_PROMPT,
 )
@@ -19,6 +20,9 @@ def optimize_prompt(
     difficulty: str = "Intermediate",
     goal: str = "Comprehensive conceptual understanding",
     audience: str = "College student",
+    output_format: str = "Structured sections with definition, steps, example, and takeaways",
+    constraints: str = "Accurate facts, no hallucinations, concise academic depth",
+    language: str = "English",
 ) -> Dict[str, Any]:
     """Optimize a user's basic study prompt into an engineered prompt using Gemini.
 
@@ -28,6 +32,9 @@ def optimize_prompt(
         difficulty: Beginner, Intermediate, or Advanced.
         goal: Study objective.
         audience: Intended learner persona.
+        output_format: Desired formatting requirements.
+        constraints: Guardrails and limits.
+        language: English or Hinglish.
 
     Returns:
         Dict with keys:
@@ -40,12 +47,17 @@ def optimize_prompt(
     if not topic.strip():
         topic = raw_prompt[:50]
 
+    lang_note = LANG_NOTE.get(language, "")
+
     formatted_prompt = OPTIMIZER_PROMPT.format(
         raw_prompt=raw_prompt,
         topic=topic,
         difficulty=difficulty,
         goal=goal,
         audience=audience,
+        output_format=output_format,
+        constraints=constraints,
+        language_note=lang_note,
     )
 
     raw_response = call_gemini(

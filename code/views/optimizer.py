@@ -57,6 +57,31 @@ def render_prompt_optimizer():
                 key="opt_aud_select",
             )
 
+        col_p1, col_p2, col_p3 = st.columns(3)
+        with col_p1:
+            output_format = st.selectbox(
+                "Desired Output Format",
+                [
+                    "Structured Sections (Definition, Steps, Example, Takeaways)",
+                    "Concise Revision Bullet Points & Memory Tips",
+                    "Step-by-Step Educational Tutorial with Code/Diagrams",
+                    "Marks-based Exam Format with Headings & Points",
+                ],
+                key="opt_format_select",
+            )
+        with col_p2:
+            constraints = st.text_input(
+                "Specific Constraints / Limits",
+                value="Under 250 words, include 1 real-world analogy, no hallucination",
+                key="opt_constraints_input",
+            )
+        with col_p3:
+            language = st.selectbox(
+                "Language Mode",
+                ["English", "Hinglish"],
+                key="opt_lang_select",
+            )
+
     btn_col1, btn_col2 = st.columns([2, 5])
     with btn_col1:
         optimize_clicked = st.button("🚀 Optimize Prompt with AI", type="primary", use_container_width=True)
@@ -75,6 +100,9 @@ def render_prompt_optimizer():
                     difficulty=difficulty,
                     goal="Comprehensive conceptual mastery",
                     audience=audience,
+                    output_format=output_format,
+                    constraints=constraints,
+                    language=language,
                 )
                 st.session_state["opt_result"] = result
                 st.session_state["opt_raw_used"] = raw_prompt

@@ -255,3 +255,11 @@ def render_response_comparison():
             """,
             unsafe_allow_html=True,
         )
+
+        st.caption(
+            "📌 **Academic Evaluation Methodology & Limitations:** Automated response benchmarking utilizes Gemini "
+            "as an impartial evaluator across 5 predefined criteria (Relevance, Clarity, Completeness, Structure, Difficulty Alignment). "
+            "Both responses were generated with identical model parameters (temperature=0.7). "
+            "While automated LLM evaluation provides structured, scalable comparative analysis, it serves as a pedagogical heuristic "
+            "and does not replace formal human grading."
+        )
