@@ -3,9 +3,11 @@
 > **"Learn Smarter. Prompt Better."**  
 > SCSE4041 Prompt Engineering Mini Project • Team Cognivance • Milestone 2 Upgrade
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://streamlit.io)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://promptwise-a7i9rzr9og3ef8hqi26nub.streamlit.app/)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://python.org)
 [![Gemini API](https://img.shields.io/badge/Model-Gemini%203.5%20Flash%20Lite-8E75C4?logo=google&logoColor=white)](https://aistudio.google.com)
+
+**🌐 Live Application:** [https://promptwise-a7i9rzr9og3ef8hqi26nub.streamlit.app/](https://promptwise-a7i9rzr9og3ef8hqi26nub.streamlit.app/)
 
 PromptWise is a production-grade, AI-powered study platform built with **Python**, **Streamlit**, and **Google's Gemini API**. It demonstrates the empirical superiority of structured prompt engineering by converting vague, ambiguous user prompts into high-yield, academically sound study materials with interactive learning, adaptive difficulty levels, empirical response benchmarking, and persistent history.
 
