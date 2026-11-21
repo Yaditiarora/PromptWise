@@ -5,7 +5,8 @@
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://promptwise-a7i9rzr9og3ef8hqi26nub.streamlit.app/)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://python.org)
-[![Gemini API](https://img.shields.io/badge/Model-Gemini%203.5%20Flash%20Lite-8E75C4?logo=google&logoColor=white)](https://aistudio.google.com)
+[![Primary Model](https://img.shields.io/badge/Primary%20Model-gemini--3.5--flash--lite-8E75C4?logo=google&logoColor=white)](https://aistudio.google.com)
+[![Fallback Model](https://img.shields.io/badge/Fallback%20Model-gemini--3.1--flash--lite-4285F4?logo=google&logoColor=white)](https://aistudio.google.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **🌐 Live Prototype Application:** [https://promptwise-a7i9rzr9og3ef8hqi26nub.streamlit.app/](https://promptwise-a7i9rzr9og3ef8hqi26nub.streamlit.app/)<br>
@@ -15,7 +16,7 @@
 
 ## 📖 Project Overview & Academic Scope
 
-PromptWise is an academic AI study assistant prototype developed as a university coursework project to investigate and demonstrate how **Prompt Engineering** techniques influence Large Language Model (LLM) responses for educational use cases. Built using **Python**, **Streamlit**, **Google's Gemini API**, and **SQLite**, the prototype transforms unstructured student queries into structured, role-grounded prompts that align outputs with specific academic levels, active recall study formats, and examination requirements.
+PromptWise is an academic AI study assistant prototype developed as a university coursework project (rather than a commercial or production-grade platform) to investigate and demonstrate how **Prompt Engineering** techniques influence Large Language Model (LLM) responses for educational use cases. Built using **Python**, **Streamlit**, **Google's Gemini API**, and **SQLite**, the prototype transforms unstructured student queries into structured, role-grounded prompts that align outputs with specific academic levels, active recall study formats, and examination requirements.
 
 ### 🎯 Problem Statement
 Students using general-purpose AI interfaces often experience:
@@ -73,10 +74,14 @@ flowchart TD
         POService --> GeminiSvc[Gemini API Client]
         PromptTpl --> GeminiSvc
         EvalService --> GeminiSvc
-        GeminiSvc --> GoogleAPI[(Google AI Studio: Gemini 3.5 Flash Lite / 3.1 Flash Lite)]
+        GeminiSvc --> GoogleAPI[(Google AI Studio: Primary gemini-3.5-flash-lite / Fallback gemini-3.1-flash-lite)]
         DBService --> SQLite[(Local SQLite history.db)]
     end
 ```
+
+### 🤖 Configured Gemini API Models (`code/services/gemini_service.py`)
+- **Primary Model ID:** `gemini-3.5-flash-lite` (default, low-latency generation)
+- **Fallback Model ID:** `gemini-3.1-flash-lite` (automatic failover upon rate limits or 503 high-demand errors)
 
 ### Application Workflow
 
@@ -199,7 +204,7 @@ The local SQLite database (`code/data/history.db`) records student sessions and 
 - Computes overall scores, score difference, and qualitative criteria commentary.
 
 > [!NOTE]
-> **Academic Note on Automated Evaluation & Illustrative Scores:** Automated LLM scoring is implemented strictly as an educational heuristic to illustrate comparative differences across rubric dimensions. Numerical scores (such as the 7.4/10 vs. 9.6/10 sample result in TC-15) represent an illustrative single-run experiment on a sample prompt, rather than broad scientific proof or formal human grading across all academic domains.
+> **Academic Note on Automated Evaluation & Illustrative Scores:** Automated LLM scoring is implemented strictly as an educational heuristic to illustrate comparative differences across rubric dimensions. Numerical scores (such as the 7.0/10 vs. 10.0/10 result in TEST 10) represent an illustrative single-run educational experiment on a sample prompt, rather than broad scientific proof or formal human grading across all academic domains.
 
 ### 5. Prompt History
 - SQLite-backed history table with keyword search and multi-factor filtering by mode and difficulty.
@@ -211,26 +216,20 @@ The local SQLite database (`code/data/history.db`) records student sessions and 
 
 ## 🧪 Verification & Testing Matrix
 
-The prototype includes an automated test suite (`code/test_promptwise_suite.py`) validating functionality and error handling.
+The prototype includes an automated test suite (`code/test_promptwise_suite.py`) containing **10 comprehensive tests** validating configuration, authentication, model generation, failure recovery, parser resilience, database CRUD, prompt templating, and end-to-end features.
 
-| Test ID | Module | Test Scenario | Expected Result | Actual Result | Status |
-|---|---|---|---|---|---|
-| **TC-01** | Database Service | Schema initialization & index creation | Table `prompt_history` and 4 indexes exist | Verified table & indexes created | ✅ PASS |
-| **TC-02** | Database Service | CRUD operations (insert, fetch, delete) | Session inserted, retrieved by ID, and deleted | Inserted ID, verified match, deleted cleanly | ✅ PASS |
-| **TC-03** | Database Service | Multi-factor filtering & keyword search | Filters by mode and difficulty; search matches substring | Returned matching records correctly | ✅ PASS |
-| **TC-04** | Gemini Service | API credentials resolution | Loads API key from Streamlit secrets or env var | Client initialized successfully | ✅ PASS |
-| **TC-05** | Gemini Service | Primary model generation (`gemini-3.5-flash-lite`) | Receives response text from primary model | Response received: `Working` | ✅ PASS |
-| **TC-06** | Gemini Service | Fallback model generation (`gemini-3.1-flash-lite`) | Receives response text from fallback model | Response received: `Working.` | ✅ PASS |
-| **TC-07** | Gemini Service | Invalid API key error handling | Raises clear error without retrying | Raises `RuntimeError` immediately | ✅ PASS |
-| **TC-08** | Gemini Service | JSON parser & LaTeX escape resilience | Decodes fenced JSON and sanitizes LaTeX backslashes | Cleanly parsed into Python dict | ✅ PASS |
-| **TC-09** | Prompt Optimizer | 7-Pillar prompt expansion | Generates structured prompt with role, task, guardrails | Expanded prompt to 948 chars | ✅ PASS |
-| **TC-10** | Study Assistant | Mode A: Explain generation | Structured explanation with analogies and takeaways | Generated 3,975 chars of structured output | ✅ PASS |
-| **TC-11** | Study Assistant | Mode B: Summarize generation | Bulleted revision notes with bold terms & memory tips | Generated 3,451 chars of revision notes | ✅ PASS |
-| **TC-12** | Study Assistant | Mode C: Interactive Quiz generation | 5 MCQs with options A–D, answer keys, explanations | Parsed 5 MCQs with options `['A', 'B', 'C', 'D']` | ✅ PASS |
-| **TC-13** | Study Assistant | Mode D: Flashcards generation | 6 conceptual cards with front and back text | Parsed 6 cards with valid front/back | ✅ PASS |
-| **TC-14** | Study Assistant | Mode E: Practice Test generation | Mixed MCQs and conceptual questions with rubric | Parsed 3 mixed questions with answer keys | ✅ PASS |
-| **TC-15** | Compare Responses| A/B comparison & heuristic evaluation | Both responses generated; heuristic evaluation completed | Basic: 7.0/10, Optimized: 8.6/10, Winner selected | ✅ PASS |
-| **TC-16** | Error Handling | Empty topic submission validation | Warning displayed; no unhandled API call made | Warning: "Please provide a study topic" | ✅ PASS |
+| Test ID | Test Category | Module / Scope | Test Scenario | Expected Result | Actual Result | Status |
+|---|---|---|---|---|---|---|
+| **TEST 1** | `[CONFIG RESOLUTION]` | Gemini Service | API Key resolution & missing credential handling (`st.secrets` & `GEMINI_API_KEY`) | Key resolved and masked; status verified | Masked key resolved (`AQ.A...qWPg`); status: `Client Initialized` | ✅ PASS |
+| **TEST 2** | `[LIVE AUTH]` | Gemini Service | Invalid API key error handling against live Google GenAI endpoint | Immediate `ClientError` raised without retrying | Caught `ClientError` / `PERMISSION_DENIED` immediately | ✅ PASS |
+| **TEST 3** | `[LIVE API]` | Gemini Service | Dual-model generation with primary (`gemini-3.5-flash-lite`) and fallback (`gemini-3.1-flash-lite`) | Both models return valid text responses | Primary: `PRIMARY_OK` (200 OK); Fallback: `FALLBACK_OK` (200 OK) | ✅ PASS |
+| **TEST 4** | `[MOCK SIMULATION]` | Gemini Service | Exponential backoff retry & fallback model progression on simulated 503 spike | Retries primary twice with backoff, then engages fallback | Progression: `gemini-3.5-flash-lite` (x2) -> `gemini-3.1-flash-lite`; payload received | ✅ PASS |
+| **TEST 5** | `[UNIT TEST]` | Parser & Security | Markdown code fences, embedded JSON, unescaped LaTeX backslashes, and malformed input | Fences stripped; LaTeX sanitized; `ValueError` on invalid text | Fences decoded; LaTeX `\lambda \theta` sanitized; `ValueError` raised on malformed text | ✅ PASS |
+| **TEST 6** | `[LOCAL DB]` | SQLite Database | Complete CRUD cycle, multi-factor filtering, keyword search, stats computation, and deletion | Session saved, retrieved by ID, filtered, searched, and deleted cleanly | Inserted ID 1, verified fields, filtered by mode/difficulty, keyword matched, deleted cleanly | ✅ PASS |
+| **TEST 7** | `[UNIT TEST]` | Prompt Templates | 7-Pillar template interpolation across 3 difficulty tiers, marks weightages (2, 5, 10), and bilingual notes | Variables and constraints correctly interpolated | All 3 difficulty tiers, 2/5/10 marks exam answers, and Hinglish notes verified | ✅ PASS |
+| **TEST 8** | `[LIVE API]` | Prompt Optimizer | Live prompt optimization with role assignment, audience calibration, and guardrails | Returns structured JSON with role, expanded prompt, and explanation | Role: `High School Biology Teacher...`; expanded prompt: 1,228 chars | ✅ PASS |
+| **TEST 9** | `[LIVE API]` | Study Assistant | End-to-end generation for Mode A (Explain) and Mode C (Interactive Quiz with schema validation) | Formatted explanation and 5 MCQs with options A–D, answer keys, explanations | Explain generated 3,569 chars; Quiz generated 5 MCQs with options `['A', 'B', 'C', 'D']` | ✅ PASS |
+| **TEST 10**| `[LIVE API]` | Compare Responses | Side-by-side A/B generation under identical temperature (0.7) and automated 5-criteria heuristic scoring | Both responses generated; heuristic evaluation completed with winner | Basic: 7.0/10, Optimized: 10.0/10; Winner: `Optimized Response` | ✅ PASS |
 
 To execute the test suite locally:
 ```bash
@@ -290,7 +289,7 @@ PromptWise is deployed on Streamlit Community Cloud:
 
 ## ⚠️ Known Limitations & Academic Disclaimers
 
-1. **Academic Prototype Status:** PromptWise is an educational prototype developed for academic coursework. It is designed to illustrate prompt engineering techniques and should not be treated as a commercial production service.
+1. **Academic Prototype Status:** PromptWise is an academic prototype developed for university coursework. It is designed strictly to investigate and demonstrate prompt engineering techniques and should not be treated as a commercial or production-grade platform.
 2. **Automated Evaluation Heuristics:** The A/B comparison feature uses Gemini to evaluate both responses against a rubric. This is an automated educational heuristic to demonstrate qualitative differences; it does not replace human grading or formal benchmarking studies.
 3. **Cloud Container Ephemeral Storage:** On local environments, SQLite persists data permanently in `code/data/history.db`. On Streamlit Community Cloud (ephemeral containers), records persist during active browser sessions but reset when the cloud container restarts or sleeps.
 4. **API Rate Limits:** Free-tier Gemini API keys are subject to Google AI Studio's requests-per-minute (15 RPM) limits. Exponential backoff and a fallback model (`gemini-3.1-flash-lite`) are implemented, but rapid automated calls may require brief pauses.
