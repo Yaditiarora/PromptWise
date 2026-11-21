@@ -140,7 +140,10 @@ def render_response_comparison():
                     metadata=eval_data,
                 )
 
-                status.update(label="✅ Benchmark completed successfully!", state="complete", expanded=False)
+                active_model = st.session_state.get("last_active_model", "gemini-3.5-flash-lite")
+                used_fb = st.session_state.get("used_fallback", False)
+                fb_suffix = " (Fallback Model)" if used_fb else " (Primary Model)"
+                status.update(label=f"✅ Benchmark generated via {active_model}{fb_suffix}!", state="complete", expanded=False)
 
             except Exception as e:
                 status.update(label=f"❌ Error occurred: {str(e)}", state="error")

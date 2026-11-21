@@ -1,59 +1,59 @@
 # 📚 PromptWise: AI-Powered Study Assistant
 
 > **"Learn Smarter. Prompt Better."**  
-> SCSE4041 Prompt Engineering Mini Project • Team Cognivance • Milestone 2 Upgrade
+> SCSE4041 Prompt Engineering Coursework Project • Team Cognivance • Milestone 2 Prototype
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://promptwise-a7i9rzr9og3ef8hqi26nub.streamlit.app/)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://python.org)
 [![Gemini API](https://img.shields.io/badge/Model-Gemini%203.5%20Flash%20Lite-8E75C4?logo=google&logoColor=white)](https://aistudio.google.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**🌐 Live Web Application:** [https://promptwise-a7i9rzr9og3ef8hqi26nub.streamlit.app/](https://promptwise-a7i9rzr9og3ef8hqi26nub.streamlit.app/)  
+**🌐 Live Prototype Application:** [https://promptwise-a7i9rzr9og3ef8hqi26nub.streamlit.app/](https://promptwise-a7i9rzr9og3ef8hqi26nub.streamlit.app/)<br>
 **💻 Source Code Repository:** [https://github.com/Yaditiarora/PromptWise](https://github.com/Yaditiarora/PromptWise)
 
 ---
 
-## 📖 Executive Summary & Academic Overview
+## 📖 Project Overview & Academic Scope
 
-PromptWise is an advanced, production-grade educational study platform designed to demonstrate the practical and empirical value of **Prompt Engineering** in modern Large Language Models (LLMs). Built using **Python**, **Streamlit**, **Google's Gemini API**, and **SQLite**, PromptWise converts vague, unguided student queries into structured, role-grounded prompts that maximize cognitive comprehension, prevent hallucinations, and provide targeted revision.
+PromptWise is an academic AI study assistant prototype developed as a university coursework project to investigate and demonstrate how **Prompt Engineering** techniques influence Large Language Model (LLM) responses for educational use cases. Built using **Python**, **Streamlit**, **Google's Gemini API**, and **SQLite**, the prototype transforms unstructured student queries into structured, role-grounded prompts that align outputs with specific academic levels, active recall study formats, and examination requirements.
 
 ### 🎯 Problem Statement
-Students frequently struggle with:
-1. **Ambiguous AI Responses:** Raw prompts (e.g. *"Explain photosynthesis"*) yield generic, poorly structured, or overwhelmingly dense text.
-2. **Cognitive Mismatch:** Answers are not calibrated to the student's academic level (School vs. Undergraduate vs. Postgraduate).
-3. **Passive Reading vs. Active Recall:** General LLM chat interfaces lack interactive self-testing, flashcard flipping, timed examinations, and targeted weak-concept diagnosis.
-4. **Lack of Structure:** Students studying for university or school exams require specific marks-based answers (2, 5, 10 marks), bullet notes, and mnemonics.
+Students using general-purpose AI interfaces often experience:
+1. **Ambiguous or Unfocused Outputs:** Vague queries (e.g., *"Explain photosynthesis"*) frequently produce unformatted, generic, or excessively verbose responses.
+2. **Cognitive Level Mismatch:** Responses are often not calibrated to the learner's academic stage (School vs. Undergraduate vs. Postgraduate).
+3. **Passive Reading vs. Active Recall:** Standard chat models lack built-in active recall mechanisms such as flashcard flipping, self-quizzing, and timed practice tests.
+4. **Unstructured Exam Preparation:** Students preparing for Indian university exams require answers formatted for specific mark weightages (2, 5, or 10 marks) with explicit point breakdowns.
 
 ### 💡 Project Objectives
-- **Demonstrate Empirical Prompt Optimization:** Transform basic prompts through a verifiable **7-Pillar Prompt Engineering framework**.
-- **Adaptive Multi-Mode Learning:** Provide 5 distinct pedagogical study modes: Explain, Summarize, Interactive Quiz, Flashcards, and Practice Test.
-- **Empirical A/B Benchmarking:** Objectively benchmark and grade basic vs. optimized prompts across 5 dimensions using transparent scoring.
-- **Local Persistent Memory:** Maintain an auditable SQLite history of study sessions, prompt evolutions, and evaluations.
-- **Zero-Friction Deployment:** Deliver a production-ready application that runs locally or in cloud containers with zero exposed credentials.
+- **Operationalize Prompt Engineering:** Implement a structured **7-Pillar Prompt Engineering framework** (Role, Task, Context, Audience, Difficulty, Format, Guardrails).
+- **Provide Multi-Mode Study Tools:** Offer 5 dedicated study modes (Explain, Summarize, Interactive Quiz, Flashcards, Practice Test) plus marks-based exam answers.
+- **A/B Response Comparison:** Provide side-by-side comparison of responses generated from basic versus engineered prompts under identical temperature settings (0.7).
+- **Session Persistence:** Store study sessions and prompt variations in a local SQLite database with search and filtering capabilities.
+- **Academic Evaluation:** Evaluate response quality across 5 qualitative criteria using LLM-assisted rubric heuristics while documenting evaluation limitations.
 
 ---
 
 ## 👥 Team Cognivance
 
-| Enrollment No. | Student Name | Role | Core Contributions |
+| Enrollment No. | Student Name | Role | Project Contributions |
 |---|---|---|---|
-| **S24CSEU0166** | **Vanshika Beniwal** (Leader) | Prompt Architect | Prompt engineering design, 7-pillar template specification, academic rubric calibration, system evaluation |
-| **S24CSEU0241** | **Yaditi Arora** | Full-Stack & AI Engineer | System architecture, Streamlit UI/UX redesign, Gemini API integration, SQLite persistence, deployment |
-| **S24CSEU0340** | **Mohita Purohit** | QA & Product Analyst | Test suite execution, verification matrix, response benchmarking, documentation, presentation |
+| **S24CSEU0166** | **Vanshika Beniwal** (Leader) | Prompt Architect | Prompt design, 7-pillar template specification, qualitative rubric calibration, testing |
+| **S24CSEU0241** | **Yaditi Arora** | Full-Stack & AI Engineer | Application architecture, Streamlit UI implementation, Gemini API integration, SQLite persistence, deployment |
+| **S24CSEU0340** | **Mohita Purohit** | QA & Product Analyst | Test execution, comparative response benchmarking, documentation, demonstration preparation |
 
 ---
 
 ## 🏛️ System Architecture
 
-PromptWise follows a clean, decoupled modular architecture separating the user interface, presentation views, prompt orchestration, AI model access, and local persistence.
+PromptWise follows a modular structure separating the user interface, service tier, prompt templates, AI model integration, and local persistence.
 
-### High-Level Architecture Diagram
+### Architecture Diagram
 
 ```mermaid
 flowchart TD
-    User([Student / Evaluator]) <--> UI[Streamlit Frontend Web App]
+    User([Student / Evaluator]) <--> UI[Streamlit Web Interface]
     
-    subgraph Presentation_Views [Modular Presentation Layer]
+    subgraph Presentation_Views [View Layer]
         UI --> Dash[1. Dashboard]
         UI --> SA[2. Study Assistant]
         UI --> PO[3. Prompt Optimizer]
@@ -62,59 +62,59 @@ flowchart TD
         UI --> Abt[6. About Project]
     end
 
-    subgraph Service_Layer [Service & Logic Tier]
+    subgraph Service_Layer [Service Layer]
         PO --> POService[Prompt Optimizer Service]
         SA --> PromptTpl[Prompt Templates Engine]
         Comp --> EvalService[Evaluation Service]
         Hist --> DBService[SQLite Database Service]
     end
 
-    subgraph AI_Backend [AI & Data Persistence]
+    subgraph AI_Backend [Backend Services]
         POService --> GeminiSvc[Gemini API Client]
         PromptTpl --> GeminiSvc
         EvalService --> GeminiSvc
-        GeminiSvc --> GoogleAPI[(Google AI Studio / Gemini 3.5 Flash Lite)]
+        GeminiSvc --> GoogleAPI[(Google AI Studio: Gemini 3.5 Flash Lite / 3.1 Flash Lite)]
         DBService --> SQLite[(Local SQLite history.db)]
     end
 ```
 
-### Application Workflow Diagram
+### Application Workflow
 
 ```mermaid
 flowchart TD
-    Start([User Opens PromptWise]) --> ModeSelect{Select Feature}
+    Start([User Opens Application]) --> ModeSelect{Select Navigation Option}
     
     ModeSelect -->|Quick Start| SA_Flow[Study Assistant]
     ModeSelect -->|Engineer Prompt| PO_Flow[Prompt Optimizer]
-    ModeSelect -->|Benchmark| Comp_Flow[Compare Responses]
+    ModeSelect -->|Compare| Comp_Flow[Compare Responses]
     ModeSelect -->|Review Past Work| Hist_Flow[Prompt History]
 
-    subgraph Study_Assistant_Modes [5 Specialized Modes]
-        SA_Flow --> M1[Explain]
+    subgraph Study_Assistant_Modes [Study Modes]
+        SA_Flow --> M1[Explain Concept]
         SA_Flow --> M2[Summarize / Notes]
         SA_Flow --> M3[Interactive Quiz]
         SA_Flow --> M4[Flashcards]
         SA_Flow --> M5[Practice Test]
     end
 
-    subgraph AI_Execution [Gemini Execution & Parsing]
-        M1 --> TextGen[Text Stream & Formatting]
+    subgraph AI_Execution [Generation & Storage]
+        M1 --> TextGen[Text Output]
         M2 --> TextGen
-        M3 --> JSONParse[JSON Parsing & Validation]
+        M3 --> JSONParse[JSON Validation]
         M4 --> JSONParse
         M5 --> JSONParse
     end
 
-    TextGen --> SaveDB[(Store in SQLite)]
+    TextGen --> SaveDB[(Save to SQLite)]
     JSONParse --> SaveDB
-    SaveDB --> OutputView([Render Interactive UI Component])
+    SaveDB --> OutputView([Render Interactive UI])
 ```
 
 ---
 
 ## 🔬 The 7 Pillars of Prompt Engineering
 
-PromptWise operationalizes prompt engineering through seven foundational architectural pillars:
+The prototype applies prompt engineering through seven foundational pillars:
 
 ```mermaid
 flowchart LR
@@ -126,121 +126,126 @@ flowchart LR
     P6 --> P7[7. Guardrails & Limits]
 ```
 
-1. **Role Assignment:** Assigns an authoritative persona (e.g., *"World-class Computer Science Professor & Academic Mentor"*).
-2. **Task Decomposition:** Transforms broad goals into concrete, sequentially ordered execution steps.
-3. **Context Grounding:** Anchors the topic to academic curricula, official terminology, and domain boundaries.
-4. **Target Audience Calibration:** Calibrates cognitive load and tone for School, Undergraduate, or Postgraduate students.
+1. **Role Assignment:** Assigns an explicit academic tutor persona tailored to the subject domain.
+2. **Task Decomposition:** Structures learning requests into clear, sequential steps (definition, mechanisms, application, takeaways).
+3. **Context Grounding:** Focuses explanations on academic concepts and course curricula.
+4. **Target Audience Calibration:** Adjusts vocabulary and tone for School, Undergraduate, or Postgraduate levels.
 5. **Difficulty Tuning:**
-   - *Beginner:* Accessible vocabulary, foundational analogies, zero assumed prerequisites.
-   - *Intermediate:* Academic precision, mechanistic depth, practical industry use cases.
-   - *Advanced:* Formal mathematical rigor, theoretical edge cases, architectural trade-offs.
-6. **Output Formatting:** Dictates exact Markdown structures, bold definitions, bulleted lists, and takeaways.
-7. **Guardrails & Negative Constraints:** Strict rules preventing hallucinations, bounding verbosity, and enforcing academic refusal for non-scholarly topics.
+   - *Beginner:* Simple language, foundational analogies, zero assumed prerequisites.
+   - *Intermediate:* Academic terminology, functional mechanisms, practical examples.
+   - *Advanced:* Theoretical depth, edge cases, analytical trade-offs.
+6. **Output Formatting:** Enforces Markdown headings, bold terms, bullet points, and memory tips.
+7. **Guardrails & Constraints:** Directs the model to stay within academic topics, bound answer lengths, and prevent speculation on uncertain facts.
 
 ---
 
-## 🗄️ Database Architecture
+## 🗄️ Database Schema (SQLite)
 
-PromptWise persists student activity, engineered prompts, and evaluation scores using local SQLite storage.
+The local SQLite database (`code/data/history.db`) records student sessions and prompt comparisons.
 
-### Schema: `prompt_history`
+### Table: `prompt_history`
 
 | Column | Type | Description |
 |---|---|---|
-| `id` | `INTEGER PRIMARY KEY AUTOINCREMENT` | Unique identifier for each study session |
-| `timestamp` | `TEXT NOT NULL` | Date and time formatted as `YYYY-MM-DD HH:MM:SS` |
-| `topic` | `TEXT NOT NULL` | Subject matter or academic topic |
-| `study_mode` | `TEXT NOT NULL` | Mode used (`Explain`, `Summarize`, `Quiz`, `Flashcards`, `Test`, `Comparison`, etc.) |
-| `difficulty` | `TEXT NOT NULL` | Academic level (`Beginner`, `Intermediate`, `Advanced`) |
-| `original_prompt` | `TEXT NOT NULL` | Raw user prompt before engineering |
-| `optimized_prompt`| `TEXT` | Prompt-engineered instructions sent to Gemini |
+| `id` | `INTEGER PRIMARY KEY AUTOINCREMENT` | Session identifier |
+| `timestamp` | `TEXT NOT NULL` | Session creation time (`YYYY-MM-DD HH:MM:SS`) |
+| `topic` | `TEXT NOT NULL` | Academic subject or query topic |
+| `study_mode` | `TEXT NOT NULL` | Feature mode (`Explain`, `Summarize`, `Quiz`, `Flashcards`, `Test`, `Comparison`, etc.) |
+| `difficulty` | `TEXT NOT NULL` | Selected level (`Beginner`, `Intermediate`, `Advanced`) |
+| `original_prompt` | `TEXT NOT NULL` | User input prior to optimization |
+| `optimized_prompt`| `TEXT` | Prompt-engineered template sent to the API |
 | `generated_response`| `TEXT NOT NULL` | AI response content or structured JSON |
-| `metadata_json` | `TEXT` | JSON payload containing scores, question data, and rubric items |
+| `metadata_json` | `TEXT` | JSON payload containing scores, question arrays, or rubric items |
 
-### Indexed Fields:
-- `idx_topic`: B-Tree index on `topic` for rapid keyword searching.
-- `idx_mode`: Index on `study_mode` for fast mode filtering.
-- `idx_difficulty`: Index on `difficulty` for level-based filtering.
-- `idx_timestamp`: Descending index for real-time chronologically sorted history.
+### Indexes:
+- `idx_topic`: B-Tree index on `topic` for keyword search queries.
+- `idx_mode`: Index on `study_mode` for mode filtering.
+- `idx_difficulty`: Index on `difficulty` for level filtering.
+- `idx_timestamp`: Index for chronological ordering.
 
 ---
 
-## 🌟 Key Application Features
+## 🌟 Application Features
 
 ### 1. Dashboard
-- **Real-Time Metrics:** Dynamic counters tracking saved study sessions, modes explored, quizzes completed, and prompts engineered.
-- **Quick-Start Grid:** 3-and-2 responsive card layout for 1-click launch into any of the 5 study modes.
-- **Recent Sessions & Breakdown:** Live activity feed and progress bars showing usage distribution by study mode.
+- Real-time counters showing saved sessions, quiz attempts, and feature usage.
+- 3-and-2 card grid for direct 1-click access to each study mode.
+- System status badge distinguishing between client configuration and live API verification.
 
-### 2. Study Assistant (5 Core Modes + Exam Answers)
-- **📖 Explain:** Concept definitions, progressive step-by-step breakdowns, real-world analogies, and core takeaways.
-- **📝 Summarize (Notes):** High-yield bullet points, bold key terms, operational formulas, and mnemonic memory tips.
-- **❓ Interactive Quiz:** 5 multiple-choice questions with 4 distinct options (`A`, `B`, `C`, `D`), interactive radio selection, instant scoring, color-coded answer badges, and explanations for each question.
-- **🗂️ Interactive Flashcards:** 3D card flip toggle (reveal answer), Previous/Next navigation, progress bar, shuffle functionality, and mastery tracking (*Mastered* vs. *Need Revision*).
-- **⏱️ Practice Test:** Timed practice exam with configurable question counts (5, 8, 10), mixed question formats (MCQs + short conceptual answers), elapsed timer, submit button, and automated Gemini evaluation with strengths and targeted revision advice.
-- **📝 Exam Answer (Marks-based):** Generates calibrated exam answers matching standard marking criteria: 2 marks (concise 2-3 lines), 5 marks (~120 words with 4 points), and 10 marks (~250 words with intro, sections, and conclusion).
-- **🌐 Bilingual Support:** Native English and Roman-script Hinglish options while preserving English technical terminology.
+### 2. Study Assistant
+- **📖 Explain:** Conceptual definitions, step-by-step breakdown, real-world analogies, and core takeaways.
+- **📝 Summarize (Notes):** Concise bullet points, bold key terms, formulas, and mnemonic memory aids.
+- **❓ Interactive Quiz:** 5 multiple-choice questions with 4 options (`A`–`D`), immediate radio-button answering, instant score calculation, and question explanations.
+- **🗂️ Interactive Flashcards:** 3D card-flip animation, Previous/Next navigation, shuffle function, and self-assessment mastery tracking (*Mastered* vs. *Need Revision*).
+- **⏱️ Practice Test:** Timed practice test with configurable question counts, mixed question formats, elapsed timer, and automated feedback with revision suggestions.
+- **📝 Marks-based Exam Answers:** Calibrated answer structures for 2-mark (short definition), 5-mark (4 structured points), and 10-mark (comprehensive essay with intro, body, and conclusion) Indian university exam patterns.
+- **🌐 Bilingual Mode:** Optional conversational Hinglish (Roman script) output while preserving technical English terminology.
 
 ### 3. Prompt Optimizer
-- Transforms raw, ambiguous prompts into production-grade prompts integrating all 7 prompt engineering pillars.
-- Interactive controls for Target Audience, Difficulty, Desired Output Format, and Custom Guardrails.
-- Side-by-side display of **Original Prompt** and **Optimized Prompt** with copy buttons and an explanation of improvements.
+- Transforms basic student prompts into structured prompts incorporating the 7 prompt engineering pillars.
+- Configurable controls for Target Audience, Difficulty, Desired Output Format, and Custom Constraints.
+- Displays the original prompt, optimized prompt, and an explanation of improvements with 1-click copy support.
 
-### 4. Compare Responses (Empirical A/B Benchmarking)
-- Generates side-by-side responses to the same topic using identical model parameters (temperature=0.7):
-  - **Response A:** Basic, unengineered prompt.
+### 4. Compare Responses (A/B Benchmarking)
+- Generates side-by-side responses to the same topic under identical generation settings (`temperature=0.7`):
+  - **Response A:** Basic, unguided prompt.
   - **Response B:** 7-pillar optimized prompt.
-- **5-Dimension Evaluation Rubric (Scored 1 to 10):**
-  1. *Relevance:* Direct adherence to core topic intent.
-  2. *Clarity:* Readability, intuitive flow, and terminology accessibility.
-  3. *Completeness:* Depth, coverage of edge cases, and avoidance of critical omissions.
-  4. *Structure:* Logical hierarchy, section headings, and ease of scanning.
-  5. *Difficulty Alignment:* Calibration to Beginner, Intermediate, or Advanced expectations.
-- Calculates an objective overall score, score delta, selected winner, and qualitative comparative verdict.
+- **Automated Rubric Evaluation (5 Criteria, 1–10 Scale):**
+  1. *Relevance:* Adherence to the core topic.
+  2. *Clarity:* Readability and accessibility.
+  3. *Completeness:* Depth and coverage of key sub-concepts.
+  4. *Structure:* Section hierarchy, headings, and formatting.
+  5. *Difficulty Alignment:* Calibration to the selected educational level.
+- Computes overall scores, score difference, and qualitative criteria commentary.
+
+> [!NOTE]
+> **Academic Note on Automated Evaluation & Illustrative Scores:** Automated LLM scoring is implemented strictly as an educational heuristic to illustrate comparative differences across rubric dimensions. Numerical scores (such as the 7.4/10 vs. 9.6/10 sample result in TC-15) represent an illustrative single-run experiment on a sample prompt, rather than broad scientific proof or formal human grading across all academic domains.
 
 ### 5. Prompt History
-- SQLite-backed history management with real-time text search and multi-factor filtering by mode and difficulty.
-- Expandable session inspection showing original prompt, optimized prompt, and full formatted response.
-- One-click **"Load in Study Assistant"** to re-open previous topics and a single-item deletion option.
+- SQLite-backed history table with keyword search and multi-factor filtering by mode and difficulty.
+- Expandable session viewer showing prompts and generated responses.
+- **"Load in Study Assistant"** button to resume previous topics in the Study Assistant.
+- Individual session deletion and bulk clear options.
 
 ---
 
 ## 🧪 Verification & Testing Matrix
 
-The project includes an automated end-to-end test suite (`code/test_promptwise_suite.py`) validating all core subsystems.
+The prototype includes an automated test suite (`code/test_promptwise_suite.py`) validating functionality and error handling.
 
 | Test ID | Module | Test Scenario | Expected Result | Actual Result | Status |
 |---|---|---|---|---|---|
-| **TC-01** | Database Service | Initialize SQLite DB and verify tables & indexes | Table `prompt_history` and 4 indexes created | Verified schema created successfully | ✅ PASS |
-| **TC-02** | Database Service | CRUD Operations (Insert, Query by ID, Delete) | Row inserted with ID, retrieved, and deleted cleanly | Added ID #3, verified data matches, deleted | ✅ PASS |
+| **TC-01** | Database Service | Schema initialization & index creation | Table `prompt_history` and 4 indexes exist | Verified table & indexes created | ✅ PASS |
+| **TC-02** | Database Service | CRUD operations (insert, fetch, delete) | Session inserted, retrieved by ID, and deleted | Inserted ID, verified match, deleted cleanly | ✅ PASS |
 | **TC-03** | Database Service | Multi-factor filtering & keyword search | Filters by mode and difficulty; search matches substring | Returned matching records correctly | ✅ PASS |
-| **TC-04** | Gemini Service | API client initialization & secrets resolution | Loads API key from secrets or environment | Client initialized successfully | ✅ PASS |
-| **TC-05** | Gemini Service | Live API generation test | Receives text from `gemini-3.5-flash-lite` | Response received: `PROMPTWISE_READY` | ✅ PASS |
-| **TC-06** | JSON Parser | Markdown fenced & unescaped JSON resilience | Parses fenced JSON and strips unescaped LaTeX backslashes | Cleanly decoded into Python dict | ✅ PASS |
-| **TC-07** | Prompt Optimizer | 7-Pillar dynamic prompt expansion | Generates structured prompt with role, context & format | Prompt expanded from 23 to 1635 chars | ✅ PASS |
-| **TC-08** | Study Assistant | Mode A: Explain generation | Structured explanation with definition, steps & takeaways | Generated 3672 chars of structured output | ✅ PASS |
-| **TC-09** | Study Assistant | Mode B: Summarize generation | Bulleted revision notes with bold terms & memory tip | Generated 3121 chars of concise notes | ✅ PASS |
-| **TC-10** | Study Assistant | Mode C: Interactive Quiz generation | 5 MCQs with options A-D, answer key, and explanation | Parsed 5 MCQs with options `['A', 'B', 'C', 'D']` | ✅ PASS |
-| **TC-11** | Study Assistant | Mode D: Flashcards generation | 6 conceptual cards with front and back | Parsed 6 cards with valid front/back | ✅ PASS |
-| **TC-12** | Study Assistant | Mode E: Practice Test generation | Mixed MCQs and conceptual questions with rubric | Parsed 3 mixed questions with answer keys | ✅ PASS |
-| **TC-13** | Compare Responses| A/B comparison & 5-dimension evaluation | Both responses generated; Gemini grades on 1-10 scale | Basic: 8.0/10, Optimized: 9.8/10, Winner selected | ✅ PASS |
-| **TC-14** | Error Handling | Empty topic submission | Warning displayed; no unhandled API invocation | Warning triggered: "Please provide a study topic" | ✅ PASS |
-| **TC-15** | Server Startup | Streamlit headless startup smoke test | Server starts on designated port without error | Uvicorn server started cleanly on port 8501 | ✅ PASS |
+| **TC-04** | Gemini Service | API credentials resolution | Loads API key from Streamlit secrets or env var | Client initialized successfully | ✅ PASS |
+| **TC-05** | Gemini Service | Primary model generation (`gemini-3.5-flash-lite`) | Receives response text from primary model | Response received: `Working` | ✅ PASS |
+| **TC-06** | Gemini Service | Fallback model generation (`gemini-3.1-flash-lite`) | Receives response text from fallback model | Response received: `Working.` | ✅ PASS |
+| **TC-07** | Gemini Service | Invalid API key error handling | Raises clear error without retrying | Raises `RuntimeError` immediately | ✅ PASS |
+| **TC-08** | Gemini Service | JSON parser & LaTeX escape resilience | Decodes fenced JSON and sanitizes LaTeX backslashes | Cleanly parsed into Python dict | ✅ PASS |
+| **TC-09** | Prompt Optimizer | 7-Pillar prompt expansion | Generates structured prompt with role, task, guardrails | Expanded prompt to 948 chars | ✅ PASS |
+| **TC-10** | Study Assistant | Mode A: Explain generation | Structured explanation with analogies and takeaways | Generated 3,975 chars of structured output | ✅ PASS |
+| **TC-11** | Study Assistant | Mode B: Summarize generation | Bulleted revision notes with bold terms & memory tips | Generated 3,451 chars of revision notes | ✅ PASS |
+| **TC-12** | Study Assistant | Mode C: Interactive Quiz generation | 5 MCQs with options A–D, answer keys, explanations | Parsed 5 MCQs with options `['A', 'B', 'C', 'D']` | ✅ PASS |
+| **TC-13** | Study Assistant | Mode D: Flashcards generation | 6 conceptual cards with front and back text | Parsed 6 cards with valid front/back | ✅ PASS |
+| **TC-14** | Study Assistant | Mode E: Practice Test generation | Mixed MCQs and conceptual questions with rubric | Parsed 3 mixed questions with answer keys | ✅ PASS |
+| **TC-15** | Compare Responses| A/B comparison & heuristic evaluation | Both responses generated; heuristic evaluation completed | Basic: 7.0/10, Optimized: 8.6/10, Winner selected | ✅ PASS |
+| **TC-16** | Error Handling | Empty topic submission validation | Warning displayed; no unhandled API call made | Warning: "Please provide a study topic" | ✅ PASS |
 
-To run the automated test suite locally at any time:
+To execute the test suite locally:
 ```bash
 python code/test_promptwise_suite.py
 ```
 
 ---
 
-## 🚀 Installation & Local Setup
+## 🚀 Local Installation & Setup
 
 ### Prerequisites
-- Python 3.10, 3.11, 3.12, 3.13, or 3.14
-- Google Gemini API Key ([Get one free at Google AI Studio](https://aistudio.google.com/))
+- Python 3.10 to 3.14
+- Google Gemini API Key ([Google AI Studio](https://aistudio.google.com/))
 
-### Step-by-Step Setup
+### Setup Steps
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/Yaditiarora/PromptWise.git
@@ -258,59 +263,46 @@ python code/test_promptwise_suite.py
    pip install -r requirements.txt
    ```
 
-4. **Configure your API credentials:**
+4. **Configure API credentials:**
    Create `.streamlit/secrets.toml`:
    ```toml
-   GEMINI_API_KEY = "your-actual-gemini-api-key-here"
+   GEMINI_API_KEY = "your-actual-api-key"
    ```
-   *(Alternatively, export `GEMINI_API_KEY="your-key"` in your shell environment).*
+   *(Alternatively, export the environment variable `export GEMINI_API_KEY="your-actual-api-key"`).*
 
-5. **Launch PromptWise:**
+5. **Run the application:**
    ```bash
    streamlit run code/app.py
    ```
-   Open your browser to **`http://localhost:8501`**.
+   Open **`http://localhost:8501`** in your browser.
 
 ---
 
-## ☁️ Deployment Guide (Streamlit Community Cloud)
+## ☁️ Deployment Information (Streamlit Community Cloud)
 
-PromptWise is fully configured for deployment on Streamlit Community Cloud:
-
-1. Fork or push this repository to your GitHub account.
-2. Visit **[share.streamlit.io](https://share.streamlit.io)** and sign in with GitHub.
-3. Click **"New App"** and select:
-   - **Repository:** `Yaditiarora/PromptWise`
-   - **Branch:** `main`
-   - **Main file path:** `code/app.py`
-4. Expand **Advanced Settings ➔ Secrets** and paste your API key:
-   ```toml
-   GEMINI_API_KEY = "your-actual-gemini-api-key"
-   ```
-5. Click **Deploy!**
+PromptWise is deployed on Streamlit Community Cloud:
+- **Repository:** `Yaditiarora/PromptWise`
+- **Branch:** `main`
+- **Main file path:** `code/app.py`
+- **Secrets:** `GEMINI_API_KEY` configured in App Settings ➔ Secrets.
 
 ---
 
-## ⚠️ Known Limitations & Future Scope
+## ⚠️ Known Limitations & Academic Disclaimers
 
-### Known Limitations
-1. **Cloud Container Ephemeral Storage:** On local environments, SQLite persists history permanently in `code/data/history.db`. On Streamlit Community Cloud (which runs on ephemeral container instances), records remain available during an active server session, but reset when the cloud container sleeps or reboots.
-2. **Automated Evaluation Heuristics:** Automated response evaluation uses Gemini as an impartial judge based on 5 pedagogical criteria. While LLM-based evaluation provides consistent multi-factor benchmarks, it serves as a pedagogical heuristic rather than an absolute formal grading metric.
-3. **API Rate Limits:** Free-tier Gemini API keys are subject to Google's standard rate limits (15 RPM / 429 quota limits). PromptWise includes exponential backoff retry logic, but heavy burst traffic may require brief cooldown periods.
-
-### Future Scope
-- **Document Grounding (RAG):** Enable students to upload PDF textbooks or lecture slide decks for syllabus-grounded answer generation.
-- **Exporting Options:** One-click PDF or Anki deck (`.apkg`) export for generated flashcards and revision notes.
-- **Voice Interactivity:** Multimodal audio integration using Gemini Live API for spoken conversational tutoring.
+1. **Academic Prototype Status:** PromptWise is an educational prototype developed for academic coursework. It is designed to illustrate prompt engineering techniques and should not be treated as a commercial production service.
+2. **Automated Evaluation Heuristics:** The A/B comparison feature uses Gemini to evaluate both responses against a rubric. This is an automated educational heuristic to demonstrate qualitative differences; it does not replace human grading or formal benchmarking studies.
+3. **Cloud Container Ephemeral Storage:** On local environments, SQLite persists data permanently in `code/data/history.db`. On Streamlit Community Cloud (ephemeral containers), records persist during active browser sessions but reset when the cloud container restarts or sleeps.
+4. **API Rate Limits:** Free-tier Gemini API keys are subject to Google AI Studio's requests-per-minute (15 RPM) limits. Exponential backoff and a fallback model (`gemini-3.1-flash-lite`) are implemented, but rapid automated calls may require brief pauses.
 
 ---
 
 ## 🔒 Security & Privacy Notice
-- API keys are **never** committed to version control, logged in application logs, or rendered in frontend UI.
+- API keys are **never** committed to version control, logged in application outputs, or displayed in the frontend.
 - All credentials are read strictly through Streamlit Secrets or environment variables and protected by `.gitignore`.
 - SQLite storage holds academic prompt text only and excludes any personal user credentials.
 
 ---
 
 ## 📄 License
-This project is open-source and available under the [MIT License](https://opensource.org/licenses/MIT).
+This project is open-source under the [MIT License](https://opensource.org/licenses/MIT).

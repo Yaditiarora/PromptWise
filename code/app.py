@@ -15,7 +15,7 @@ if str(CODE_DIR) not in sys.path:
 
 import streamlit as st
 from services import db_service
-from services.gemini_service import is_client_ready
+from services.gemini_service import get_api_status, is_client_ready
 from ui.styles import apply_theme
 from views.about import render_about
 from views.comparator import render_response_comparison
@@ -90,21 +90,17 @@ with st.sidebar:
     st.markdown("<hr style='border-color: rgba(139, 92, 246, 0.15); margin: 24px 0 16px 0;'>", unsafe_allow_html=True)
 
     # System Status & Quick Stats
-    ready, status_msg = is_client_ready()
-    status_color = "#10b981" if ready else "#ef4444"
-    status_icon = "🟢" if ready else "🔴"
-    status_text = "Gemini API Connected" if ready else "API Disconnected"
-
+    api_info = get_api_status()
     st.markdown(
         f"""
         <div style="background: rgba(22, 27, 46, 0.6); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 10px; padding: 12px; margin-bottom: 16px;">
             <div style="font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 0.05em;">SYSTEM STATUS</div>
-            <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 0.85rem; font-weight: 600; color: {status_color};">
-                <span>{status_icon}</span>
-                <span>{status_text}</span>
+            <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 0.85rem; font-weight: 600; color: {api_info['color']};">
+                <span>{api_info['icon']}</span>
+                <span>{api_info['label']}</span>
             </div>
             <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 4px;">
-                Model: <code>gemini-3.5-flash-lite</code>
+                {api_info['details']}
             </div>
         </div>
         """,

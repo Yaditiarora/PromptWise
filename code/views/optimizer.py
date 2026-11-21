@@ -119,7 +119,10 @@ def render_prompt_optimizer():
                     generated_response=result["explanation_of_improvements"],
                     metadata=result,
                 )
-                st.success("✅ Prompt optimized dynamically using Gemini!")
+                active_model = st.session_state.get("last_active_model", "gemini-3.5-flash-lite")
+                used_fb = st.session_state.get("used_fallback", False)
+                fb_suffix = " (Fallback Model)" if used_fb else " (Primary Model)"
+                st.success(f"✅ Prompt engineered via `{active_model}`{fb_suffix}!")
             except Exception as e:
                 st.error(f"❌ Optimization failed: {str(e)}")
 

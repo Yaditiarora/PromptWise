@@ -249,7 +249,10 @@ def render_study_assistant():
                         generated_response=content,
                     )
 
-                st.success("✅ Content generated and saved to your history successfully!")
+                active_model = st.session_state.get("last_active_model", "gemini-3.5-flash-lite")
+                used_fb = st.session_state.get("used_fallback", False)
+                fb_suffix = " (Fallback Model)" if used_fb else " (Primary Model)"
+                st.success(f"✅ Generated via `{active_model}`{fb_suffix} and saved to your history successfully!")
 
             except Exception as e:
                 st.error(f"❌ Generation failed: {str(e)}")
@@ -295,7 +298,7 @@ def render_interactive_quiz(quiz_data: Dict[str, Any]):
         qid = q.get("id", idx + 1)
         q_text = q.get("question", "")
         options = q.get("options", {})
-        correct = q.get("correct_answer", "").strip().upper()
+        correct = (q.get("correct_answer") or q.get("answer") or q.get("correct_option") or q.get("correct") or "").strip().upper()
         explanation = q.get("explanation", "")
 
         st.markdown(f"**Question {idx + 1}:** {q_text}")
@@ -353,7 +356,7 @@ def render_interactive_quiz(quiz_data: Dict[str, Any]):
         # Calculate final score
         correct_count = sum(
             1 for q in questions
-            if user_answers.get(q.get("id", 0)) == q.get("correct_answer", "").strip().upper()
+            if user_answers.get(q.get("id", 0)) == (q.get("correct_answer") or q.get("answer") or q.get("correct_option") or q.get("correct") or "").strip().upper()
         )
         total = len(questions)
         pct = (correct_count / total) * 100
