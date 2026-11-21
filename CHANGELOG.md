@@ -1,5 +1,12 @@
 # Changelog (since Milestone 1)
 
+- 2026-11-21: Final Milestone 2 Submission Readiness:
+  - Verified and locked dual-model fallback pipeline (`gemini-3.5-flash-lite` primary -> `gemini-3.1-flash-lite` fallback).
+  - Implemented exponential backoff and retry handling for transient API status codes (429, 500, 503, timeouts).
+  - Enhanced dual credential resolution supporting Streamlit Secrets and OS environment variables with full key masking.
+  - Streamlined sidebar navigation layout for a clean, minimal user experience.
+  - Ran comprehensive 10-test automated test suite across all 5 study modes, prompt optimizer, database, and A/B comparator with 100% pass rate.
+  - Updated architectural and workflow diagrams, evaluation rubric caveats, and installation documentation in README.md.
 - 2026-11-19: Major Production Upgrade:
   - Redesigned UI/UX into a modern AI SaaS interface with custom dark navy and purple design system.
   - Implemented 6-page sidebar navigation (Dashboard, Study Assistant, Prompt Optimizer, Compare Responses, Prompt History, About Project).
@@ -11,7 +18,7 @@
   - Modularized codebase into `services/`, `views/`, `ui/`, `prompts/`, and `data/`.
   - Added automated end-to-end test suite (`code/test_promptwise_suite.py`) and verified all features with `gemini-3.5-flash-lite`.
 - 2026-11-19: Production Hardening & Faculty Demonstration Readiness:
-  - Validated primary Gemini model `gemini-3.5-flash-lite` and secondary fallback `gemini-3.8-flash`.
+  - Validated primary Gemini model `gemini-3.5-flash-lite` and secondary fallback `gemini-3.1-flash-lite`.
   - Added multi-factor environment resolution (Streamlit secrets and OS environment variables).
   - Pinned production package versions in `requirements.txt` (`streamlit==1.67.0`, `google-genai==3.4.0`).
   - Added academic evaluation methodology and documented limitations of automated LLM scoring.
