@@ -124,16 +124,6 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-    # Footer
-    st.markdown(
-        """
-        <div style="font-size: 0.75rem; color: #64748b; text-align: center; margin-top: 20px;">
-            PromptWise v2.0 • Team Cognivance<br>
-            SCSE4041 Prompt Engineering
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
 
 # ----------------- VIEW ROUTING -----------------
 active_page = st.session_state.get("nav_selection_radio", "Dashboard")
